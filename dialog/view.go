@@ -19,7 +19,7 @@ func generateView(g *gocui.Gui, desc string, fill string, coords []int, editable
 	}
 	view, _ := g.View(desc)
 	view.Title = desc
-	view.Wrap = false
+	view.Wrap = !editable
 	view.Autoscroll = true
 	view.Editable = editable
 
@@ -40,6 +40,7 @@ func GenerateParamsLayout(params map[string]string, command string) {
 	g.Highlight = true
 	g.Cursor = true
 	g.SelFgColor = gocui.ColorGreen
+	g.InputEsc = true
 
 	g.SetManagerFunc(layout)
 
@@ -49,7 +50,7 @@ func GenerateParamsLayout(params map[string]string, command string) {
 	idx := 0
 	for k, v := range params {
 		generateView(g, k, v, []int{maxX / 10, (maxY / 4) + (idx+1)*layoutStep,
-			maxX/10 + 20, (maxY / 4) + 2 + (idx+1)*layoutStep}, true)
+			maxX/10 + 40, (maxY / 4) + 2 + (idx+1)*layoutStep}, true)
 		idx++
 	}
 
@@ -66,7 +67,7 @@ func GenerateParamsLayout(params map[string]string, command string) {
 	}
 }
 
-func nextView(g *gocui.Gui) error {
+func nextView(g *gocui.Gui, ) error {
 	next := curView + 1
 	if next > len(views)-1 {
 		next = 0
@@ -80,6 +81,20 @@ func nextView(g *gocui.Gui) error {
 	return nil
 }
 
+func prevView(g *gocui.Gui, ) error {
+	prev := curView + 1
+	if prev < 0 {
+		prev = len(views)-1
+	}
+
+	if _, err := g.SetCurrentView(views[prev]); err != nil {
+		return err
+	}
+
+	curView = prev
+	return nil
+}
+
 func initKeybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		return err
@@ -88,9 +103,21 @@ func initKeybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("", gocui.KeyEnter, gocui.ModNone, evaluateParams); err != nil {
 		return err
 	}
+
+	if err := g.SetKeybinding("", gocui.KeyEsc, gocui.ModNone, quit); err != nil {
+		return err
+	}
+
 	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone,
 		func(g *gocui.Gui, v *gocui.View) error {
 			return nextView(g)
+		}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModAlt,
+		func(g *gocui.Gui, v *gocui.View) error {
+			return prevView(g)
 		}); err != nil {
 		return err
 	}

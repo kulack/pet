@@ -1,7 +1,6 @@
 # pet : CLI Snippet Manager
 
-[![GitHub release](https://img.shields.io/github/release/knqyf263/pet.svg)](https://github.com/knqyf263/pet/releases/latest)
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/knqyf263/pet/blob/master/LICENSE)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/kulack/pet/blob/master/LICENSE)
 
 <img src="doc/logo.png" width="150">
 
@@ -9,10 +8,66 @@ Simple command-line snippet manager, written in Go
 
 <img src="doc/pet01.gif" width="700">
 
-You can use variables (`<param>` or `<param=default_value>` ) in snippets.
+You can use variables (`${param}` or `${param=default_value}` ) in snippets.
+If you use the form `${param}` then the default value comes from the environment, so `${USER}` is your user name.
+You can escape the parameters using `$${VAR}` syntax. After escaping the variable, when the command
+is executed the result will be the literal string `${VAR}` in the executed command. At this point
+the shell will perform environment variable substitution.
 
 <img src="doc/pet08.gif" width="700">
 
+# Fork by Kulack
+
+Kulack forked pet from https://github.com/knqyf263/pet in December 2018
+
+### Additions by Kulack
+
+- *BREAKING CHANGE* version 0.3.3 to 0.4.3
+  Changed the parameter format in the snippet.toml file from
+  `<param>` to `${param}` to more closely mimic shell variables.
+  This allows more native use of XML text and redirections in commands.
+
+- Package renaming from github.com/knqyf263/pet to github.com/kulack/pet.
+
+- Support adding executed commands to shell History
+  - You can add the -H/--history to the pet exec command to write a file /tmp/pet.history
+  - There is a a default "history" boolean in the General section of config file.
+  - In your Bash environment, you should use
+    `PROMPT_COMMAND='history -r /tmp/pet.histfile; echo "" > /tmp/pet.histfile'`
+    to update your history after running pet exec
+  - In your Zsh environment, you could use something like this as an alias
+    for the pet command.
+    ```
+      pet() {
+        command pet $*;
+        PETFILE=/tmp/pet.histfile
+        if [ -e $PETFILE ]; then
+          fc -R $PETFILE
+          fc -W ~/.zsh_history
+          rm $PETFILE
+        fi
+      }
+    ```
+
+Minor usability changes
+- Use the escape key in the command or parameter view to exit immediately.
+- By default, using `exec` and `search` immediately uses the one-and-only match when the --query parameter is used,
+  you can disable this behavior with the --nosingle/-e parameter.
+- Support for parameter default values for variable replacement. The value of  ${VAR} will come from the environment. If there is a default value in the parameter clause `${variable=value}` then that value is used.
+- Slightly changed the use of terminal width in the parameter view and list command for wide terminals.
+- Running a command with `exec` now always shows command when running it
+- Added --exact/-e parameter to provide exact matches of search text used with the --query parameter instead of fuzzy matching. This allows using
+  pet commands in scripts and can save browsing and keystrokes if you know exactly the text to match for
+  a target command, note that the `selectCmd` in the configuration file can also be augmented with fzf --exact command,
+  but the addition of the --exact parameter to pet allows only an occasional use of the exact matching.
+
+
+
+### TODO
+(Or maybe not)
+
+
+- Building and releases in github and brew
 
 # Abstract
 
@@ -21,7 +76,7 @@ You can use variables (`<param>` or `<param=default_value>` ) in snippets.
 `pet` is a simple command-line snippet manager (inspired by [memo](https://github.com/mattn/memo)).
 I always forget commands that I rarely use. Moreover, it is difficult to search them from shell history. There are many similar commands, but they are all different.
 
-e.g. 
+e.g.
 - `$ awk -F, 'NR <=2 {print $0}; NR >= 5 && NR <= 10 {print $0}' company.csv` (What I am looking for)
 - `$ awk -F, '$0 !~ "DNS|Protocol" {print $0}' packet.csv`
 - `$ awk -F, '{print $0} {if((NR-1) % 5 == 0) {print "----------"}}' test.csv`
@@ -69,7 +124,7 @@ So I made it possible to register snippets with description and search them easi
 `pet` has the following features.
 
 - Register your command snippets easily.
-- Use variables in snippets.
+- Use variables (from environment or otherwise) in snippets.
 - Search snippets interactively.
 - Run snippets directly.
 - Edit snippets easily (config is just a TOML file).
@@ -101,7 +156,7 @@ function prev() {
 ```
 
 ### fish
-See below for details.  
+See below for details.
 https://github.com/otms61/fish-pet
 
 <img src="doc/pet02.gif" width="700">
@@ -136,7 +191,7 @@ bindkey '^s' pet-select
 ```
 
 ### fish
-See below for details.  
+See below for details.
 https://github.com/otms61/fish-pet
 
 <img src="doc/pet03.gif" width="700">
@@ -188,7 +243,7 @@ Use "pet [command] --help" for more information about a command.
 ```
 
 # Snippet
-Run `pet edit`  
+Run `pet edit`
 You can also register the output of command (but cannot search).
 
 ```
@@ -223,6 +278,9 @@ Run `pet configure`
   selectcmd = "fzf"               # selector command for edit command (fzf or peco)
   backend = "gist"                # specify backend service to sync snippets (gist or gitlab, default: gist)
   sortby  = "description"         # specify how snippets get sorted (recency (default), -recency, description, -description, command, -command, output, -output)
+  singleMatch = "-1"              # specify the selector command parameter that will exit immediately upon a single match
+  legacyParams = false            # Use the legacy format <param> for parameters instead of ${param}
+file
 
 [Gist]
   file_name = "pet-snippet.toml"  # specify gist file name
@@ -292,7 +350,7 @@ You must obtain access token.
 Go https://github.com/settings/tokens/new and create access token (only need "gist" scope).
 Set that to `access_token` in `[Gist]` or use an environment variable with the name `$PET_GITHUB_ACCESS_TOKEN`.
 
-After setting, you can upload snippets to Gist.  
+After setting, you can upload snippets to Gist.
 If `gist_id` is not set, new gist will be created.
 ```
 $ pet sync
@@ -358,56 +416,19 @@ Upload success
 ```
 
 # Installation
-You need to install selector command ([fzf](https://github.com/junegunn/fzf) or [peco](https://github.com/peco/peco)).  
+You need to install selector command ([fzf](https://github.com/junegunn/fzf) or [peco](https://github.com/peco/peco)).
 `homebrew` install `fzf` automatically.
 
 ## Binary
-Go to [the releases page](https://github.com/knqyf263/pet/releases), find the version you want, and download the zip file. Unpack the zip file, and put the binary to somewhere you want (on UNIX-y systems, /usr/local/bin or the like). Make sure it has execution bits turned on. 
+None yet.
 
-## Mac OS X / Homebrew
-You can use homebrew on OS X.
-```
-$ brew install knqyf263/pet/pet
-```
-
-If you receive an error (`Error: knqyf263/pet/pet 64 already installed`) during `brew upgrade`, try the following command
-
-```
-$ brew unlink pet && brew uninstall pet
-($ rm -rf /usr/local/Cellar/pet/64)
-$ brew install knqyf263/pet/pet
-```
-
-## RedHat, CentOS
-Download rpm package from [the releases page](https://github.com/knqyf263/pet/releases)
-```
-$ sudo rpm -ivh https://github.com/knqyf263/pet/releases/download/v0.3.0/pet_0.3.0_linux_amd64.rpm
-```
-
-## Debian, Ubuntu
-Download deb package from [the releases page](https://github.com/knqyf263/pet/releases)
-```
-$ wget https://github.com/knqyf263/pet/releases/download/v0.3.0/pet_0.3.0_linux_amd64.deb
-dpkg -i pet_0.3.0_linux_amd64.deb
-```
-
-## Archlinux
-Two packages are available in [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository).
-You can install the package [from source](https://aur.archlinux.org/packages/pet-git):
-```
-$ yaourt -S pet-git
-```
-Or [from the binary](https://aur.archlinux.org/packages/pet-bin):
-```
-$ yaourt -S pet-bin
-```
 
 ## Build
 
 ```
-$ mkdir -p $GOPATH/src/github.com/knqyf263
-$ cd $GOPATH/src/github.com/knqyf263
-$ git clone https://github.com/knqyf263/pet.git
+$ mkdir -p $GOPATH/src/github.com/kulack
+$ cd $GOPATH/src/github.com/kulack
+$ git clone https://github.com/kulack/pet.git
 $ cd pet
 $ make install
 ```
@@ -418,8 +439,8 @@ https://blog.saltedbrain.org/2018/12/converting-keep-to-pet-snippets.html
 
 # Contribute
 
-1. fork a repository: github.com/knqyf263/pet to github.com/you/repo
-2. get original code: `go get github.com/knqyf263/pet`
+1. fork a repository: github.com/kulack/pet to github.com/you/repo
+2. get original code: `go get github.com/kulack/pet`
 3. work on original code
 4. add remote to your repo: git remote add myfork https://github.com/you/repo.git
 5. push your changes: git push myfork
@@ -433,4 +454,5 @@ https://blog.saltedbrain.org/2018/12/converting-keep-to-pet-snippets.html
 MIT
 
 # Author
-Teppei Fukuda
+Fred A Kulack (Forked from Teppei Fukuda https://github.com/knqyf263/pet in December 2018)
+

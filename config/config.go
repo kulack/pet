@@ -11,6 +11,10 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	RunOptionEcho = 1
+)
+
 // Conf is global config variable
 var Conf Config
 
@@ -26,9 +30,13 @@ type GeneralConfig struct {
 	SnippetFile string `toml:"snippetfile"`
 	Editor      string `toml:"editor"`
 	Column      int    `toml:"column"`
+	Command     bool   `toml:"command"`
 	SelectCmd   string `toml:"selectcmd"`
 	Backend     string `toml:"backend"`
 	SortBy      string `toml:"sortby"`
+	History     bool `toml:"history"`
+	SingleMatch string `toml:"singleMatch"`
+	LegacyParams bool `toml:"legacyParams"`
 }
 
 // GistConfig is a struct of config for Gist
@@ -62,6 +70,11 @@ type FlagConfig struct {
 	OneLine   bool
 	Color     bool
 	Tag       bool
+	NoSingleMatch  bool
+	Raw       bool
+	Silent    bool
+	Exact     bool
+	History   bool
 }
 
 // Load loads a config toml
@@ -105,6 +118,9 @@ func (cfg *Config) Load(file string) error {
 	cfg.General.Column = 40
 	cfg.General.SelectCmd = "fzf"
 	cfg.General.Backend = "gist"
+	cfg.General.SingleMatch = "-1"
+	cfg.General.LegacyParams = false
+	cfg.General.History = false;
 
 	cfg.Gist.FileName = "pet-snippet.toml"
 

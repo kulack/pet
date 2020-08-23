@@ -10,22 +10,28 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/knqyf263/pet/config"
-	"github.com/knqyf263/pet/dialog"
-	"github.com/knqyf263/pet/snippet"
+	"github.com/kulack/pet/config"
+	"github.com/kulack/pet/dialog"
+	"github.com/kulack/pet/snippet"
 )
 
 func editFile(command, file string) error {
 	command += " " + file
-	return run(command, os.Stdin, os.Stdout)
+	return run(command, os.Stdin, os.Stdout, []int{})
 }
 
-func run(command string, r io.Reader, w io.Writer) error {
+func run(command string, r io.Reader, w io.Writer, runOptions []int) error {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
 		cmd = exec.Command("cmd", "/c", command)
 	} else {
 		cmd = exec.Command("sh", "-c", command)
+	}
+	for _, v := range runOptions {
+		switch v {
+		case config.RunOptionEcho:
+			fmt.Println(command)
+		}
 	}
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = w
@@ -41,7 +47,9 @@ func filter(options []string) (commands []string, err error) {
 
 	snippetTexts := map[string]snippet.SnippetInfo{}
 	var text string
-	for _, s := range snippets.Snippets {
+	// fzf selector orders the items in reverse
+	for i := len(snippets.Snippets)-1; i>=0; i-- {
+		s := snippets.Snippets[i]
 		command := s.Command
 		if strings.ContainsAny(command, "\n") {
 			command = strings.Replace(command, "\n", "\\n", -1)
@@ -65,7 +73,7 @@ func filter(options []string) (commands []string, err error) {
 	var buf bytes.Buffer
 	selectCmd := fmt.Sprintf("%s %s",
 		config.Conf.General.SelectCmd, strings.Join(options, " "))
-	err = run(selectCmd, strings.NewReader(text), &buf)
+	err = run(selectCmd, strings.NewReader(text), &buf, []int{})
 	if err != nil {
 		return nil, nil
 	}
@@ -76,7 +84,7 @@ func filter(options []string) (commands []string, err error) {
 	if params != nil {
 		snippetInfo := snippetTexts[lines[0]]
 		dialog.CurrentCommand = snippetInfo.Command
-		dialog.GenerateParamsLayout(params, dialog.CurrentCommand)
+		dialog.GenerateParamsLayout(params, dialog.PrepareCommand(dialog.CurrentCommand))
 		res := []string{dialog.FinalCommand}
 		return res, nil
 	}
