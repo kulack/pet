@@ -61,7 +61,16 @@ Minor usability changes
   a target command, note that the `selectCmd` in the configuration file can also be augmented with fzf --exact command,
   but the addition of the --exact parameter to pet allows only an occasional use of the exact matching.
 
+Installing Kulack's Fork (macos)
 
+```
+    brew install go
+    go get github.com/kulack/pet # (this fails to build)
+    cd $GOPATH/src/github.com/kulack/pet
+    go mod vendor
+    go install -i .
+    # Binary is now in $GOPATH/bin/pet
+```
 
 ### TODO
 (Or maybe not)

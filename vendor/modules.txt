@@ -1,0 +1,75 @@
+# github.com/BurntSushi/toml v0.3.0
+## explicit
+github.com/BurntSushi/toml
+# github.com/briandowns/spinner v0.0.0-20170614154858-48dbb65d7bd5
+## explicit
+github.com/briandowns/spinner
+# github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e
+## explicit
+github.com/chzyer/readline
+# github.com/fatih/color v1.7.0
+## explicit
+github.com/fatih/color
+# github.com/golang/protobuf v1.1.0
+## explicit
+github.com/golang/protobuf/proto
+# github.com/google/go-github v15.0.0+incompatible
+## explicit
+github.com/google/go-github/github
+# github.com/google/go-querystring v0.0.0-20170111101155-53e6ce116135
+## explicit
+github.com/google/go-querystring/query
+# github.com/inconshreveable/mousetrap v1.0.0
+## explicit
+github.com/inconshreveable/mousetrap
+# github.com/jroimartin/gocui v0.4.0
+## explicit
+github.com/jroimartin/gocui
+# github.com/mattn/go-colorable v0.0.9
+## explicit
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.3
+## explicit
+github.com/mattn/go-isatty
+# github.com/mattn/go-runewidth v0.0.2
+## explicit
+github.com/mattn/go-runewidth
+# github.com/nsf/termbox-go v0.0.0-20180509163535-21a4d435a862
+## explicit
+github.com/nsf/termbox-go
+# github.com/pkg/errors v0.8.0
+## explicit
+github.com/pkg/errors
+# github.com/spf13/cobra v0.0.3
+## explicit
+github.com/spf13/cobra
+# github.com/spf13/pflag v1.0.1
+## explicit
+github.com/spf13/pflag
+# github.com/xanzy/go-gitlab v0.10.5
+## explicit
+github.com/xanzy/go-gitlab
+# golang.org/x/crypto v0.0.0-20180608092829-8ac0e0d97ce4
+## explicit
+golang.org/x/crypto/ssh/terminal
+# golang.org/x/net v0.0.0-20180530234432-1e491301e022
+## explicit
+golang.org/x/net/context
+golang.org/x/net/context/ctxhttp
+# golang.org/x/oauth2 v0.0.0-20180603041954-1e0a3fa8ba9a
+## explicit
+golang.org/x/oauth2
+golang.org/x/oauth2/internal
+# golang.org/x/sys v0.0.0-20191026070338-33540a1f6037
+## explicit
+golang.org/x/sys/unix
+golang.org/x/sys/windows
+# google.golang.org/appengine v1.0.0
+## explicit
+google.golang.org/appengine/internal
+google.golang.org/appengine/internal/base
+google.golang.org/appengine/internal/datastore
+google.golang.org/appengine/internal/log
+google.golang.org/appengine/internal/remote_api
+google.golang.org/appengine/internal/urlfetch
+google.golang.org/appengine/urlfetch

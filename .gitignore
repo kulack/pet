@@ -30,6 +30,5 @@ pkg
 .vscode/
 
 .glide/
-vendor/
 pet
 dist/
