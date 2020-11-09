@@ -49,8 +49,8 @@ func execute(cmd *cobra.Command, args []string) (err error) {
 	}
 	if flag.History || config.Conf.General.History {
 		var histfile = "/tmp/pet.histfile"
-		var escaped = strings.Replace(command, "\"", "\\\"", -1)
-		var hist = fmt.Sprintf("HISTFILE=%s history -s \"%s\"; history -w %s",
+		var escaped = strings.Replace(command, "'", "'\\''", -1)
+		var hist = fmt.Sprintf("HISTFILE=%s history -s '%s'; history -w %s",
 			histfile, escaped, histfile)
 		var histOptions = []int{};
 		if config.Flag.Debug {
