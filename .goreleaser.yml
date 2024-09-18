@@ -1,18 +1,18 @@
 release:
   github:
-    owner: knqyf263
+    owner: kulack
     name: pet
   name_template: '{{.Tag}}'
 brews:
   -
     tap:
-      owner: knqyf263
-      name: homebrew-pet
+      owner: kulack
+      name: homebrew-pet-kulack
     commit_author:
       name: goreleaserbot
       email: goreleaser@carlosbecker.com
-    description: "Simple command-line snippet manager"
-    homepage: "https://github.com/knqyf263/pet"
+    description: "Simple command-line snippet manager (fork by Kulack)"
+    homepage: "https://github.com/kulack/pet"
     dependencies:
       - fzf
     install: |
@@ -33,7 +33,7 @@ builds:
   goarm:
   - "6"
   main: .
-  ldflags: -s -w -X github.com/knqyf263/pet/cmd.version={{.Version}}
+  ldflags: -s -w -X github.com/kulack/pet/cmd.version={{.Version}}
 archives:
   -
     format: tar.gz
@@ -46,9 +46,9 @@ archives:
     - misc/completions/zsh/_pet
 nfpms:
   -
-    homepage: https://github.com/knqyf263/pet
-    maintainer: Teppei Fukuda <knqyf263@gmail.com>
-    description: "Simple command-line snippet manager"
+    homepage: https://github.com/kulack/pet
+    maintainer: Fred Kulack <kulack@gmail.com>
+    description: "Simple command-line snippet manager (fork by Kulack)"
     bindir: /usr/local/bin
     license: MIT
     formats:

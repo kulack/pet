@@ -11,9 +11,9 @@ import (
 
 	"github.com/chzyer/readline"
 	"github.com/fatih/color"
-	"github.com/knqyf263/pet/config"
-	"github.com/knqyf263/pet/snippet"
-	petSync "github.com/knqyf263/pet/sync"
+	"github.com/kulack/pet/config"
+	"github.com/kulack/pet/snippet"
+	petSync "github.com/kulack/pet/sync"
 	"github.com/spf13/cobra"
 )
 

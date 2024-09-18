@@ -1,7 +1,7 @@
 # pet : CLI Snippet Manager
 
-[![GitHub release](https://img.shields.io/github/release/knqyf263/pet.svg)](https://github.com/knqyf263/pet/releases/latest)
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/knqyf263/pet/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/kulack/pet.svg)](https://github.com/kulack/pet/releases/latest)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/kulack/pet/blob/master/LICENSE)
 
 <img src="doc/logo.png" width="150">
 
@@ -9,10 +9,62 @@ Simple command-line snippet manager, written in Go
 
 <img src="doc/pet01.gif" width="700">
 
-You can use variables (`<param>` or `<param=default_value>` ) in snippets.
+Kulack's Fork: 
+You can use variables (`${param}` or `${param=default_value}` ) in snippets.
+If you use the form `${param}` then the default value comes from the environment, so `${USER}` is your user name.
 
 <img src="doc/pet08.gif" width="700">
 
+
+# Fork by Kulack
+
+Kulack forked pet from https://github.com/knqyf263/pet in December 2018
+
+### Additions by Kulack
+
+- **BREAKING CHANGES** 
+
+  - Changed the parameter format in the snippet.toml file from
+    `<param>` to `${param}` to more closely mimic shell variables.
+    This allows more native use of XML text and redirections in commands.
+
+- Other changes
+  - Support keys ESC and Shift-TAB in the parameter view editor.
+    - ESC will quit the editor without running the command
+    - Shift-TAB will move the cursor to the previous parameter
+  
+  - Package renaming from github.com/knqyf263/pet to github.com/kulack/pet.
+
+  - Added support to pull default values for variables from the environment
+
+  - Support adding executed commands to shell History
+    - You can use the -H/--history to the pet exec command to write a file /tmp/pet.history
+    - You can add a default "history" boolean in the General section of config file.
+    - In your Bash environment, you should use
+      `PROMPT_COMMAND='history -r /tmp/pet.histfile; echo "" > /tmp/pet.histfile'`
+      to update your history after running pet exec
+    - In your Zsh environment, you could use something like this as an alias
+      for the pet command.
+      ```
+        pet() {
+          command pet $*;
+          PETFILE=/tmp/pet.histfile
+          if [ -e $PETFILE ]; then
+            fc -R $PETFILE
+            rm $PETFILE
+          fi
+        }
+      ```
+
+Installing Kulack's Fork (macos)
+
+```
+    brew install go
+    cd $GOPATH/src/github.com/kulack/pet
+    go mod vendor
+    go install .
+    # Binary is now in $GOPATH/bin/pet
+```
 
 # Abstract
 
@@ -128,7 +180,7 @@ https://github.com/otms61/fish-pet
 ### bash
 By adding the following config to `.bashrc`, you can search snippets and output on the shell.
 This will also allow you to execute the commands yourself, which will add them to your shell history! This is basically the only way we can manipulate shell history.
-This also allows you to *chain* commands! [Example here](https://github.com/knqyf263/pet/discussions/266)
+This also allows you to *chain* commands! [Example here](https://github.com/kulack/pet/discussions/266)
 
 ```
 cat .bashrc
@@ -451,32 +503,32 @@ You need to install selector command ([fzf](https://github.com/junegunn/fzf) or 
 `homebrew` install `fzf` automatically.
 
 ## Binary
-Go to [the releases page](https://github.com/knqyf263/pet/releases), find the version you want, and download the zip file. Unpack the zip file, and put the binary to somewhere you want (on UNIX-y systems, /usr/local/bin or the like). Make sure it has execution bits turned on. 
+Go to [the releases page](https://github.com/kulack/pet/releases), find the version you want, and download the zip file. Unpack the zip file, and put the binary to somewhere you want (on UNIX-y systems, /usr/local/bin or the like). Make sure it has execution bits turned on. 
 
 ## Mac OS X / Homebrew
 You can use homebrew on OS X.
 ```
-brew install knqyf263/pet/pet
+brew install kulack/pet/pet
 ```
 
-If you receive an error (`Error: knqyf263/pet/pet 64 already installed`) during `brew upgrade`, try the following command
+If you receive an error (`Error: kulack/pet/pet 64 already installed`) during `brew upgrade`, try the following command
 
 ```
 brew unlink pet && brew uninstall pet
 (rm -rf /usr/local/Cellar/pet/64)
-brew install knqyf263/pet/pet
+brew install kulack/pet/pet
 ```
 
 ## RedHat, CentOS
-Download rpm package from [the releases page](https://github.com/knqyf263/pet/releases)
+Download rpm package from [the releases page](https://github.com/kulack/pet/releases)
 ```
-sudo rpm -ivh https://github.com/knqyf263/pet/releases/download/v0.3.0/pet_0.3.0_linux_amd64.rpm
+sudo rpm -ivh https://github.com/kulack/pet/releases/download/v0.3.0/pet_0.3.0_linux_amd64.rpm
 ```
 
 ## Debian, Ubuntu
-Download deb package from [the releases page](https://github.com/knqyf263/pet/releases)
+Download deb package from [the releases page](https://github.com/kulack/pet/releases)
 ```
-wget https://github.com/knqyf263/pet/releases/download/v0.3.6/pet_0.3.6_linux_amd64.deb
+wget https://github.com/kulack/pet/releases/download/v0.3.6/pet_0.3.6_linux_amd64.deb
 dpkg -i pet_0.3.6_linux_amd64.deb
 ```
 
@@ -494,9 +546,9 @@ yaourt -S pet-bin
 ## Build
 
 ```
-mkdir -p $GOPATH/src/github.com/knqyf263
-cd $GOPATH/src/github.com/knqyf263
-git clone https://github.com/knqyf263/pet.git
+mkdir -p $GOPATH/src/github.com/kulack
+cd $GOPATH/src/github.com/kulack
+git clone https://github.com/kulack/pet.git
 cd pet
 make install
 ```
@@ -507,8 +559,8 @@ https://blog.saltedbrain.org/2018/12/converting-keep-to-pet-snippets.html
 
 # Contribute
 
-1. fork a repository: github.com/knqyf263/pet to github.com/you/repo
-2. get original code: `go get github.com/knqyf263/pet`
+1. fork a repository: github.com/kulack/pet to github.com/you/repo
+2. get original code: `go get github.com/kulack/pet`
 3. work on original code
 4. add remote to your repo: git remote add myfork https://github.com/you/repo.git
 5. push your changes: git push myfork
@@ -522,4 +574,4 @@ https://blog.saltedbrain.org/2018/12/converting-keep-to-pet-snippets.html
 MIT
 
 # Author
-Teppei Fukuda
+Fred A Kulack (Forked from Teppei Fukuda https://github.com/knqyf263/pet in December 2018)

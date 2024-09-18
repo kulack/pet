@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/knqyf263/pet/config"
+	"github.com/kulack/pet/config"
 )
 
 func run(command string, r io.Reader, w io.Writer) error {

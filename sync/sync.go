@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/knqyf263/pet/config"
-	"github.com/knqyf263/pet/snippet"
+	"github.com/kulack/pet/config"
+	"github.com/kulack/pet/snippet"
 	"github.com/pkg/errors"
 )
 

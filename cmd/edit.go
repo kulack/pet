@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/knqyf263/pet/config"
-	petSync "github.com/knqyf263/pet/sync"
+	"al.essio.dev/pkg/shellescape"
+	"github.com/kulack/pet/config"
+	petSync "github.com/kulack/pet/sync"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"gopkg.in/alessio/shellescape.v1"
 )
 
 // editCmd represents the edit command

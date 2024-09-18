@@ -5,19 +5,17 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/knqyf263/pet/config"
-	"github.com/knqyf263/pet/dialog"
-	"github.com/knqyf263/pet/snippet"
+	"github.com/kulack/pet/config"
+	"github.com/kulack/pet/dialog"
+	"github.com/kulack/pet/snippet"
 )
 
 func editFile(command, file string, startingLine int) error {
 	// Note that this works for most unix editors (nano, vi, vim, etc)
-	// TODO: Remove for other kinds of editors - this is only for UX
-	command += " +" + strconv.Itoa(startingLine) + " " + file
+	command += " " + file
 	return run(command, os.Stdin, os.Stdout)
 }
 

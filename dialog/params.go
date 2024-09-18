@@ -1,6 +1,7 @@
 package dialog
 
 import (
+	"os"
 	"regexp"
 	"strings"
 
@@ -18,7 +19,11 @@ var (
 	// This matches most encountered patterns
 	// Skips match if there is a whitespace at the end ex. <param='my >
 	// Ignores <, > characters since they're used to match the pattern
-	parameterStringRegex = `<([^<>]*[^\s])>`
+	// OLD Search: parameterStringRegex = `<([^<>]*[^\s])>`
+
+	// Support normal shell variable syntax ${VAR=xxx}
+	// Allows special characters in variable values like ${REGEXP=24\\.9\\.79\\.[09]}
+	parameterStringRegex = `\$\{([^\s=\}]+(?:=(?:\\\\|\\\}|[^\}])*)?)\}`
 )
 
 func insertParams(command string, filledInParams map[string]string) string {
@@ -64,7 +69,9 @@ func SearchForParams(command string) [][2]string {
 
 		// Set to empty if no value is provided and param is not already set
 		if !separatorFound && !param_exists {
-			extracted[paramKey] = ""
+			// There is no value specified for the variable, pull the
+			// default variable from the environment if it exists.
+			extracted[paramKey] = os.ExpandEnv("$" + paramKey)
 		} else if separatorFound {
 			// Set to default value instead if it is provided
 			extracted[paramKey] = defaultValue

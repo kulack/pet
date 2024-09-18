@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/knqyf263/pet/config"
+	"al.essio.dev/pkg/shellescape"
+	"github.com/kulack/pet/config"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/ssh/terminal"
-	"gopkg.in/alessio/shellescape.v1"
 )
 
 var delimiter string

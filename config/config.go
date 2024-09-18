@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/pelletier/go-toml"
+	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
 )
 
@@ -34,6 +34,7 @@ type GeneralConfig struct {
 	Color       bool
 	Format      string
 	Cmd         []string
+	History     bool `toml:"history"`
 }
 
 // GistConfig is a struct of config for Gist
@@ -82,6 +83,7 @@ type FlagConfig struct {
 	Tag          bool
 	UseMultiLine bool
 	UseEditor    bool
+	History      bool
 }
 
 // Load loads a config toml

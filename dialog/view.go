@@ -190,8 +190,25 @@ func nextView(g *gocui.Gui) error {
 	return nil
 }
 
+func prevView(g *gocui.Gui) error {
+	prev := curView - 1
+	if prev < 0 {
+		prev = len(views) - 1
+	}
+
+	if _, err := g.SetCurrentView(views[prev]); err != nil {
+		return err
+	}
+
+	curView = prev
+	return nil
+}
+
 func initKeybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
+		return err
+	}
+	if err := g.SetKeybinding("", gocui.KeyEsc, gocui.ModNone, quit); err != nil {
 		return err
 	}
 
@@ -204,6 +221,13 @@ func initKeybindings(g *gocui.Gui) error {
 		}); err != nil {
 		return err
 	}
+	if err := g.SetKeybinding("", gocui.KeyBacktab, gocui.ModNone,
+		func(g *gocui.Gui, v *gocui.View) error {
+			return prevView(g)
+		}); err != nil {
+		return err
+	}
+
 	return nil
 }
 

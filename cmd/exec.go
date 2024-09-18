@@ -1,13 +1,13 @@
 package cmd
 
 import (
+	"al.essio.dev/pkg/shellescape"
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/knqyf263/pet/config"
+	"github.com/kulack/pet/config"
 	"github.com/spf13/cobra"
-	"gopkg.in/alessio/shellescape.v1"
 )
 
 // execCmd represents the exec command
@@ -35,6 +35,15 @@ func execute(cmd *cobra.Command, args []string) (err error) {
 	// Show final command before executing it
 	fmt.Printf("> %s\n", command)
 
+	if flag.History || config.Conf.General.History {
+		var histfile = "/tmp/pet.histfile"
+		var escaped = strings.Replace(command, "'", "'\\''", -1)
+		var hist = fmt.Sprintf("HISTFILE=%s history -s '%s'; history -w %s",
+			histfile, escaped, histfile)
+		if err := run(hist, os.Stdin, os.Stdout); err != nil {
+			fmt.Println("Failed to update history: ", err)
+		}
+	}
 	return run(command, os.Stdin, os.Stdout)
 }
 
@@ -46,4 +55,6 @@ func init() {
 		`Initial value for query`)
 	execCmd.Flags().StringVarP(&config.Flag.FilterTag, "tag", "t", "",
 		`Filter tag`)
+	execCmd.Flags().BoolVarP(&config.Flag.History, "history", "H", false,
+		`Write History to /tmp/pet.histfile`)
 }

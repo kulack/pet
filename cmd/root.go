@@ -25,7 +25,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/knqyf263/pet/config"
+	"github.com/kulack/pet/config"
 	"github.com/spf13/cobra"
 )
 
@@ -37,8 +37,8 @@ var (
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:           "pet",
-	Short:         "Simple command-line snippet manager.",
-	Long:          `pet - Simple command-line snippet manager.`,
+	Short:         "Simple command-line snippet manager (fork by Kulack).",
+	Long:          `pet - Simple command-line snippet manager (fork by Kulack).`,
 	SilenceErrors: true,
 	SilenceUsage:  true,
 }
@@ -64,7 +64,7 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version number",
 	Long:  `Print the version number`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("pet version %s\n", version)
+		fmt.Printf("pet version %s (fork by Kulack)\n", version)
 	},
 }
 

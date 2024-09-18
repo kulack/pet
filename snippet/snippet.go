@@ -7,9 +7,9 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/BurntSushi/toml"
 	"github.com/kennygrant/sanitize"
-	"github.com/knqyf263/pet/config"
-	"github.com/pelletier/go-toml"
+	"github.com/kulack/pet/config"
 )
 
 type Snippets struct {
